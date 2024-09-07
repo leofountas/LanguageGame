@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    --bs-gutter-x: 0;
+}
+
+body {
+    height: 100vh;
+}
+
+.speech {
+    height: 250px;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .speech {
+        display: none;
+    }
+} 
