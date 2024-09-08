@@ -7,27 +7,62 @@ use Model\Word;
 class LanguageGame
 {
     private array $words = [];
+    public int $round = 1;
 
     public function __construct()
     {
        
-        foreach (Data::words() as $frenchTranslation => $englishTranslation) {
-            
+        foreach (Data::words() as $frenchTranslation => $englishTranslation) 
+        {
             $words = new Word($frenchTranslation, $englishTranslation);
             $this->words[] = $words;
         }
+
+    }
+
+    private function startNewRound() {
+        
+        if ($_SESSION['round'] <= 10) {
+        $randomIndex = array_rand($this->words);
+        $selectedWord = $this->words[$randomIndex];
+        $_SESSION['current_word'] = $selectedWord;
+
+        }else {
+            echo "Game Over!";
+            $_SESSION['round']=1;
+        }
+        
+    }
+
+    private function checkAnswerAndContinue(): void {
+        if (!isset($_POST['answer']) || !isset($_SESSION['current_word'])) {
+            echo "Error: Missing answer or current word";
+            return;
+        }
+    
+        $submittedAnswer = $_POST['answer'];
+        $currentWord = $_SESSION['current_word'];
+    
+        if ($currentWord->verify($submittedAnswer)) {
+            echo "Correct! ";
+            
+        } else {
+            echo "Incorrect. The correct answer was: " . $currentWord->getEnglish() . ". ";
+        }
+        
+        // Start a new round immediately after checking the answer
+        $_SESSION['round']++;
+        $this->startNewRound();
     }
 
     public function run(): void
     {
-        // TODO: check for option A or B
-
-        // Option A: user visits site first time (or wants a new word)
-        // TODO: select a random word for the user to translate
-
-        // Option B: user has just submitted an answer
-        // TODO: verify the answer (use the verify function in the word class) - you'll need to get the used word from the array first
-        // TODO: generate a message for the user that can be shown
-
+      
+        if (!isset($_POST['answer'])) {
+            $this->startNewRound();
+        } else {
+                $this->checkAnswerAndContinue();
+               
+            }
     }
 }
