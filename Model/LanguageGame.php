@@ -9,12 +9,19 @@ class LanguageGame
 {
     private array $words = [];
     public int $round = 1;
+    public int $score;
 
     public function __construct()
     {
+        if (!isset($_SESSION['score'])) {
+            $_SESSION['score'] = 0;
+        }
+        $this->score = $_SESSION['score'];
+
         if (!isset($_SESSION['round'])) {
             $_SESSION['round'] = $this->round;
-              
+            
+            
         }
 
         foreach (Data::words() as $frenchTranslation => $englishTranslation) 
@@ -30,7 +37,12 @@ class LanguageGame
         if ($_SESSION['round'] >= 10) {
            
             
-            header("Location:../LanguageGame/index.php?gameover=true");
+            $finalScore = $this->score;
+            $this->score = 0;
+            $_SESSION['score'] = $this->score;
+    
+            // Redirect to a page that shows the final score
+            header("Location:../LanguageGame/index.php?gameover=true&score=" . $finalScore);
 
             $_SESSION['round'] = 1;
 
@@ -40,20 +52,6 @@ class LanguageGame
             $selectedWord = $this->words[$randomIndex];
             $_SESSION['current_word'] = $selectedWord;
         }
-    }
-
-    private function resetGame(): void
-    {
-        
-        $_SESSION['round'] = 1;
-        unset($_SESSION['current_word']);
-        unset($_SESSION['correct']);
-        unset($_SESSION['wrong']);
-        $_SESSION['score'] = 0;
-    
-        // Redirect to the start page
-        header("Location: index.php");
-        exit();
     }
 
 
@@ -67,8 +65,9 @@ class LanguageGame
         $currentWord = $_SESSION['current_word'];
     
         if ($currentWord->verify($submittedAnswer)) {
-            $_SESSION['correct'] = "Correct!"; 
-            
+            $_SESSION['correct'] = "Correct!";
+            $this->score++;
+            $_SESSION['score'] = $this->score;
         } else {
             $_SESSION['wrong'] = "Incorrect. The correct answer was: " . $currentWord->getEnglish() . ". ";
         }
@@ -87,5 +86,9 @@ class LanguageGame
                 $this->checkAnswerAndContinue();
                
             }
+    }
+
+    public function getScore(){
+        return $this->score;
     }
 }

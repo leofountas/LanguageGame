@@ -59,9 +59,8 @@ spl_autoload_register();
       <div class="card-body p-0">
         <div class="col-12 d-flex flex-wrap justify-content-between mb-2 border border-danger p-2 px-3">
           <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
-            <h5 class="card-title mb-2 mb-sm-0 col-12 col-sm-4">Player: <span>Name</span></h5>
             <h5 class="card-title mb-2 mb-sm-0 col-12 col-sm-4">Round: <span><?= $_SESSION['round'] ?></span>/10</h5>
-            <h5 class="card-title mb-2 mb-sm-0 col-12 col-sm-4">Score: <span></span>/10</h5>
+            <h5 class="card-title mb-2 mb-sm-0 col-12 col-sm-4">Score: <span><?= $game->getScore()?></span>/10</h5>
           </div>
         </div>
       </div>
@@ -81,40 +80,20 @@ spl_autoload_register();
       </form>
     </div>
   </div>
-
-  <div class="modal modal1" style="display: none" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
-          <h5 class="modal-title text-light">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="newplayer.php">
-            <input type="text" placeholder="Write your Nickname" name="nickname">
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger">Start Game</button>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="modal"  id="gameoverPopup" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-danger">
-          <h5 class="modal-title text-light">Modal title</h5>
+          <h5 class="modal-title text-light"></h5>
         </div>
-        <div class="modal-body">
-          <form method="post" action="newplayer.php">
-            <input type="text" placeholder="Write your Nickname" name="nickname">
-          </form>
+        <div class="modal-body row text-center">
+          <h2>GAME OVER!</h2>
+         <p id="finalScore"></p>
         </div>
-        <form method="POST" action="index.php">
-          <input type="hidden" name="new_game" value="true">
-          <button type="submit">New Game</button>
-        </form>
+          <div class="col d-flex flex-row-reverse m-2 ">
+            <button type="submit" class="btn btn-danger"><a href="../LanguageGame/index.php">Play Again</a></button>
+          </div>
       </div>
     </div>
   </div>
